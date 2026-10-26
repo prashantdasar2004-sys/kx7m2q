@@ -88,7 +88,7 @@ wind-forecast-utility/
 
 ## How to Start
 
-### Option A: With Docker (configuration provided; not run on the author's machine)
+### Option A: With Docker (Recommended)
 
 Make sure Docker Desktop is running, then run:
 
