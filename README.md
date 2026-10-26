@@ -142,6 +142,19 @@ Frontend will be available at [http://localhost:5173](http://localhost:5173). Th
 
 ---
 
+## Refreshing the Data
+
+To refresh the local Parquet datasets directly from the public Elexon BMRS API:
+
+```bash
+python backend/scripts/fetch_data.py
+```
+
+* **Date Range Fetched**: `2025-12-25T00:00:00Z` to `2026-02-01T01:00:00Z` (captures December 2025 lookback required for D-1 cutoff evaluation on January 1, through all settlement periods of January 2026).
+* **Saved Outputs**: Updates `backend/data/fuelhh_actuals.parquet` and `backend/data/windfor_forecasts.parquet`.
+
+---
+
 ## Automated Tests
 
 The backend test suite includes 16 unit and integration tests verifying the mathematical formulas, timeline cutoff logic, horizon calculations, REST endpoints, and Vercel serverless entrypoint.
@@ -165,6 +178,8 @@ python -m pytest backend/tests -v
 - **High Over-Forecasting Frequency**: Under the default `09:00` $D-1$ cutoff, day-ahead forecasts over-predicted actual wind generation in **84.9% of settlement slots** (1,263 out of 1,488 slots).
 - **Systematic Positive Bias**: The average forecast error was **+1,851.90 MW** (MAE: 2,145.17 MW; RMSE: 2,615.81 MW). Because bias is positive, wind buyers regularly faced supply shortfalls relative to day-ahead expectations.
 - **Risk Buffer Requirement**: To cover unexpected wind generation deficits in 90% of settlement periods, a utility would have needed to procure a **4,274.90 MW safe reserve buffer**.
+- **Safe Buffer Equivalence**: The "90% safe buffer" (one-sided P90 of max(forecast - actual, 0)) equals the P90 absolute error (4,274.90 MW) here because the largest absolute errors are all over-forecasts.
+- **Level Offset vs. Timing Shift**: Mean actual wind was 11,580.74 MW and mean forecast 13,432.64 MW, so the bias is a level offset (about 16% of mean actual), not a timing shift.
 
 ### Limitations
 1. **Root Cause Undetermined**: The underlying cause of this positive bias **cannot be determined from these two datasets alone** (`FUELHH` actuals and `WINDFOR` forecasts). In the GB system, a shortfall in metered wind outturn relative to day-ahead forecasts can be driven by several distinct mechanisms:
