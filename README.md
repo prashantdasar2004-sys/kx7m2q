@@ -1,7 +1,7 @@
 # UK Wind Generation Forecast vs Actuals (January 2026)
 
-[![Live App Demo](https://img.shields.io/badge/Demo-Vercel%20Deployment-blue?style=for-the-badge&logo=vercel)](https://your-deployment-url.vercel.app)
-> **Live Application URL**: [https://your-deployment-url.vercel.app](https://your-deployment-url.vercel.app) *(Update this placeholder with your live Vercel URL after deployment)*
+[![Live App Demo](https://img.shields.io/badge/Demo-Vercel%20Deployment-blue?style=for-the-badge&logo=vercel)](https://kx7m2q.vercel.app)
+> **Live Application URL**: [https://kx7m2q.vercel.app](https://kx7m2q.vercel.app)
 
 A decision-support web application for a UK energy utility evaluating Great Britain (GB) day-ahead wind generation forecasts against actual metered outturn for **January 2026**.
 
@@ -88,7 +88,7 @@ wind-forecast-utility/
 
 ## How to Start
 
-### Option A: With Docker (Recommended)
+### Option A: With Docker (configuration provided; not run on the author's machine)
 
 Make sure Docker Desktop is running, then run:
 
