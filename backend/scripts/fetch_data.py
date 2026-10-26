@@ -2,7 +2,7 @@
 fetch_data.py
 
 Fetches historical wind generation actuals (FUELHH) and forecasts (WINDFOR)
-from the public Elexon BMRS API v1 for the period 2025-12-25 to 2026-01-31.
+from the public Elexon BMRS API v1 for the period 2025-12-25 to 2026-02-01.
 
 Saves the cleaned results to local Parquet files:
 - backend/data/fuelhh_actuals.parquet
@@ -27,10 +27,10 @@ logger = logging.getLogger("fetch_data")
 # Base URL for public Elexon Insights Solution (BMRS) API
 BASE_URL = "https://data.elexon.co.uk/bmrs/api/v1"
 
-# Target date range: covers December 2025 baseline and entire January 2026
+# Target date range: covers December 2025 baseline, entire January 2026, and 2026-02-01
 START_DATE_STR = "2025-12-25T00:00:00Z"
-# We fetch through 2026-02-01T01:00:00Z to ensure we capture the final settlement period of Jan 31
-END_DATE_STR = "2026-02-01T01:00:00Z"
+# We fetch through 2026-02-02T01:00:00Z to ensure we capture the final settlement period of Feb 01
+END_DATE_STR = "2026-02-02T01:00:00Z"
 
 # Directory where parquet files are saved
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"

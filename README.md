@@ -3,7 +3,7 @@
 [![Live App Demo](https://img.shields.io/badge/Demo-Vercel%20Deployment-blue?style=for-the-badge&logo=vercel)](https://kx7m2q.vercel.app)
 > **Live Application URL**: [https://kx7m2q.vercel.app](https://kx7m2q.vercel.app)
 
-A decision-support web application for a UK energy utility evaluating Great Britain (GB) day-ahead wind generation forecasts against actual metered outturn for **January 2026**.
+A decision-support web application for a UK energy utility evaluating Great Britain (GB) day-ahead wind generation forecasts against actual metered outturn for **decisions made in January 2026** (delivery days 2026-01-02 to 2026-02-01).
 
 The application evaluates systematic forecast bias, quantifies safety reserve buffers required to protect against sudden wind drops, and allows trading analysts to benchmark different pre-auction morning decision cutoffs without lookahead bias.
 
@@ -81,7 +81,7 @@ wind-forecast-utility/
    - Elexon `WINDFOR` forecasts are issued at 1-hour intervals, whereas GB settlement periods (`FUELHH`) operate on 30-minute intervals (48 slots per day).
    - *Assumption*: We assume the hourly forecast represents the expected generation level across the full hour and carry it forward across the subsequent half-hour (e.g. the 14:00 forecast applies to 14:00-14:30 and 14:30-15:00).
 3. **Analysis Window**:
-   - Strictly spans **2026-01-01 00:00:00 to 2026-01-31 23:30:00 UK Time (`Europe/London`)**.
+   - Strictly spans delivery days **2026-01-02 00:00:00 to 2026-02-01 23:30:00 UK Time (`Europe/London`)**. The analysis window is defined by decision date ($D-1$) falling in January 2026 (decisions made from 2026-01-01 through 2026-01-31).
    - Covers exactly 31 delivery days $\times$ 48 settlement periods = **1,488 half-hour slots**. Under the 09:00 cutoff, 100% of slots (0 missing) have valid forecasts.
 
 ---
@@ -150,7 +150,7 @@ To refresh the local Parquet datasets directly from the public Elexon BMRS API:
 python backend/scripts/fetch_data.py
 ```
 
-* **Date Range Fetched**: `2025-12-25T00:00:00Z` to `2026-02-01T01:00:00Z` (captures December 2025 lookback required for D-1 cutoff evaluation on January 1, through all settlement periods of January 2026).
+* **Date Range Fetched**: `2025-12-25T00:00:00Z` to `2026-02-02T01:00:00Z` (captures December 2025 lookback required for D-1 cutoff evaluation on January 1, through all 48 settlement periods of 2026-02-01).
 * **Saved Outputs**: Updates `backend/data/fuelhh_actuals.parquet` and `backend/data/windfor_forecasts.parquet`.
 
 ---
@@ -174,12 +174,12 @@ python -m pytest backend/tests -v
 
 ## Findings & Limitations
 
-### January 2026 Findings
-- **High Over-Forecasting Frequency**: Under the default `09:00` $D-1$ cutoff, day-ahead forecasts over-predicted actual wind generation in **84.9% of settlement slots** (1,263 out of 1,488 slots).
-- **Systematic Positive Bias**: The average forecast error was **+1,851.90 MW** (MAE: 2,145.17 MW; RMSE: 2,615.81 MW). Because bias is positive, wind buyers regularly faced supply shortfalls relative to day-ahead expectations.
-- **Risk Buffer Requirement**: To cover unexpected wind generation deficits in 90% of settlement periods, a utility would have needed to procure a **4,274.90 MW safe reserve buffer**.
-- **Safe Buffer Equivalence**: The "90% safe buffer" (one-sided P90 of max(forecast - actual, 0)) equals the P90 absolute error (4,274.90 MW) here because the largest absolute errors are all over-forecasts.
-- **Level Offset vs. Timing Shift**: Mean actual wind was 11,580.74 MW and mean forecast 13,432.64 MW, so the bias is a level offset (about 16% of mean actual), not a timing shift.
+### Findings (Decisions Made in January 2026)
+- **High Over-Forecasting Frequency**: Under the default `09:00` $D-1$ cutoff for decisions made in January 2026, day-ahead forecasts over-predicted actual wind generation in **84.7% of settlement slots** (1,261 out of 1,488 slots).
+- **Systematic Positive Bias**: The average forecast error was **+1,747.89 MW** (MAE: 2,041.96 MW; RMSE: 2,509.06 MW). Because bias is positive, wind buyers regularly faced supply shortfalls relative to day-ahead expectations.
+- **Risk Buffer Requirement**: To cover unexpected wind generation deficits in 90% of settlement periods, a utility would have needed to procure a **4,140.10 MW safe reserve buffer**.
+- **Safe Buffer Equivalence**: The "90% safe buffer" (one-sided P90 of max(forecast - actual, 0)) equals the P90 absolute error (4,140.10 MW) here because the largest absolute errors are all over-forecasts (100% of the top 10% largest absolute errors were over-forecasts).
+- **Level Offset vs. Timing Shift**: Mean actual wind was 11,283.56 MW and mean forecast 13,031.44 MW, so the bias is a level offset (about 15.5% of mean actual), not a timing shift.
 
 ### Limitations
 1. **Root Cause Undetermined**: The underlying cause of this positive bias **cannot be determined from these two datasets alone** (`FUELHH` actuals and `WINDFOR` forecasts). In the GB system, a shortfall in metered wind outturn relative to day-ahead forecasts can be driven by several distinct mechanisms:

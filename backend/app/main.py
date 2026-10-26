@@ -228,7 +228,7 @@ def get_day_forecast(
     if not (start_bound <= delivery_date <= end_bound):
         raise HTTPException(
             status_code=400,
-            detail=f"Requested day {day} is outside the January 2026 analysis window ({start_bound} to {end_bound})."
+            detail=f"Requested day {day} is outside the analysis window ({start_bound} to {end_bound})."
         )
 
     # 1. Select forecasts for this delivery day

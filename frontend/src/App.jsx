@@ -11,7 +11,7 @@ export default function App() {
   const [config, setConfig] = useState({
     allowed_cutoffs: ['06:00', '08:00', '09:00'],
     default_cutoff: '09:00',
-    date_range: { start: '2026-01-01', end: '2026-01-31' },
+    date_range: { start: '2026-01-02', end: '2026-02-01' },
   });
 
   const [selectedDate, setSelectedDate] = useState('2026-01-15');

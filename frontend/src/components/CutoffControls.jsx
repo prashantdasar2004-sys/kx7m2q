@@ -7,7 +7,7 @@ export default function CutoffControls({
   selectedCutoff,
   onCutoffChange,
   allowedCutoffs = ['06:00', '08:00', '09:00'],
-  dateRange = { start: '2026-01-01', end: '2026-01-31' },
+  dateRange = { start: '2026-01-02', end: '2026-02-01' },
 }) {
   return (
     <div className="card controls-card">

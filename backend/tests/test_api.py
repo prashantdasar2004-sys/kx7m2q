@@ -34,8 +34,8 @@ def test_config_endpoint(client):
     assert data["allowed_cutoffs"] == ["06:00", "08:00", "09:00"]
     assert "10:00" not in data["allowed_cutoffs"]
     assert data["default_cutoff"] == "09:00"
-    assert data["date_range"]["start"] == "2026-01-01"
-    assert data["date_range"]["end"] == "2026-01-31"
+    assert data["date_range"]["start"] == "2026-01-02"
+    assert data["date_range"]["end"] == "2026-02-01"
 
 
 def test_forecast_day_endpoint_success(client):
@@ -74,7 +74,7 @@ def test_forecast_day_outside_window(client):
     """Verifies that requesting a date outside January 2026 returns 400."""
     response = client.get("/api/forecast?day=2026-02-15&cutoff=09:00")
     assert response.status_code == 400
-    assert "outside the January 2026 analysis window" in response.json()["detail"]
+    assert "outside the analysis window" in response.json()["detail"]
 
 
 def test_metrics_summary_endpoint(client):
